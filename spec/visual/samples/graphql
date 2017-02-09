@@ -1,0 +1,77 @@
+{
+  human(id: "1000") {
+    name
+    # Queries can have comments!
+    width(max: 5.5)
+    height(unit: FOOT)
+  }
+}
+
+{
+  empireHero: hero(episode: EMPIRE) {
+    name
+  }
+  jediHero: hero(episode: JEDI) {
+    name
+  }
+}
+
+query HeroForEpisode($ep: Episode!) {
+  hero(episode: $ep) {
+    name
+    ... on Droid {
+      primaryFunction
+    }
+    ... on Human {
+      height
+    }
+  }
+}
+
+{
+  leftComparison: hero(episode: EMPIRE) {
+    ...comparisonFields
+  }
+  rightComparison: hero(episode: JEDI) {
+    ...comparisonFields
+  }
+}
+
+fragment comparisonFields on Character {
+  name
+  appearsIn
+  friends {
+    name
+  }
+}
+
+query HeroNameAndFriends($boolean: Boolean = true) {
+  hero(showAll: $boolean) {
+    name
+    friends {
+      name
+    }
+  }
+}
+
+mutation addComment {
+  addComment(input: {
+    body: "test"
+    subjectId: 1
+  }) {
+    commentEdge {
+      ... on IssueCommentEdge {
+        node {
+          id
+        }
+      }
+    }
+  }
+}
+
+mutation CreateReviewForEpisode($ep: Episode!, $review: ReviewInput!) {
+  createReview(episode: $ep, review: $review) {
+    stars
+    commentary
+  }
+}
